@@ -12,44 +12,157 @@
 
     <div class="w-full flex justify-end items-center mb-4">
   <div class="order-last ml-12">
-    <button data-toggle="modal" data-target="#modal-default" style="margin-right: 490px;"  class="modal-open inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+
+<button @click="showModal = true" style="margin-right: 490px;" class="modal-open inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 4h6a2 2 0 012 2v2h3a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2v-8a2 2 0 012-2h3V6a2 2 0 012-2z" />
       </svg>
       Rent a Car
     </button>
+
+
   </div>
 </div>
 
+<div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
 
-<div  id="modal-default" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-    <div class="relative w-full h-full max-w-2xl md:h-auto">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Terms of Service
-                </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
-                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
-            <!-- Modal body -->
-            <div class="p-6 space-y-6">
-                <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                   This Modal
-                </p>
-            </div>
-            <!-- Modal footer -->
-            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button data-modal-hide="defaultModal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
-                <button data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
-            </div>
+    <div class="modal bg-white rounded-lg overflow-hidden" style="z-index: 9999">
+      <div style="width: 490px;" class="px-4 py-5 sm:p-12">
+        <div class="flex items-start justify-between">
+          <h3 class="text-lg font-medium text-gray-900">Add Vehicle</h3>
+          <button @click="showModal = false" class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
+            <span class="sr-only">Close</span>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         </div>
-    </div>
+
+        <div class="mt-5">
+            <form class="space-y-6" @submit.prevent="register">
+
+<div>
+  <label for="brand" class="block text-sm font-medium text-gray-700">
+    Car Brand
+  </label>
+  <div class="mt-1">
+    <input id="brand" name="brand" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="brand">
+  </div>
 </div>
+
+ <div>
+  <label for="model" class="block text-sm font-medium text-gray-700">
+    Car Model
+  </label>
+  <div class="mt-1">
+    <input id="model" name="model" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="model">
+  </div>
+</div>
+
+<div>
+<label for="year" class="block text-sm font-medium text-gray-700">
+Car Year
+</label>
+<div class="mt-1">
+<input id="year" name="year" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="year">
+</div>
+</div>
+
+<div>
+<label for="color" class="block text-sm font-medium text-gray-700">
+Car Color
+</label>
+<div class="mt-1">
+<input id="color" name="color" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="color">
+</div>
+</div>
+
+<div>
+<label for="license_plate" class="block text-sm font-medium text-gray-700">
+Car License Plate
+</label>
+<div class="mt-1">
+<input id="license_plate" name="license_plate" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="license_plate">
+</div>
+</div>
+
+<div>
+<label for="gearbox_type" class="block text-sm font-medium text-gray-700">
+Car Gearbox Type
+</label>
+<div class="mt-1">
+<input id="gearbox_type" name="gearbox_type" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="gearbox_type">
+</div>
+</div>
+
+<div>
+<label for="fuel_type" class="block text-sm font-medium text-gray-700">
+Car Fuel Type
+</label>
+<div class="mt-1">
+<input id="fuel_type" name="fuel_type" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="fuel_type">
+</div>
+</div>
+
+<div>
+<label for="power" class="block text-sm font-medium text-gray-700">
+Car Horse Power
+</label>
+<div class="mt-1">
+<input id="power" name="power" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="power">
+</div>
+</div>
+
+<div>
+<label for="engine_capacity" class="block text-sm font-medium text-gray-700">
+Car Engine Capacity
+</label>
+<div class="mt-1">
+<input id="engine_capacity" name="engine_capacity" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="engine_capacity">
+</div>
+</div>
+
+<div>
+<label for="engine_code" class="block text-sm font-medium text-gray-700">
+Car Engine Code
+</label>
+<div class="mt-1">
+<input id="engine_code" name="engine_code" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="engine_code">
+</div>
+</div>
+
+<div>
+<label for="vin" class="block text-sm font-medium text-gray-700">
+Car Vehicle Identification Number
+</label>
+<div class="mt-1">
+<input id="vin" name="vin" type="text" autocomplete="off" required class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="vin">
+</div>
+</div>
+
+<div>
+    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+Register
+</button>
+</div>
+</form>
+        </div>
+      </div>
+
+      <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+        <button @click="showModal = false" class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-transparent rounded-md hover:bg-gray-200 focus:outline-none focus:bg-gray-200 focus:shadow-outline-blue active:bg-gray-200 transition ease-in-out duration-150">
+          Close
+        </button>
+        <button class="inline-flex justify-center ml-3 px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition ease-in-out duration-150"
+                @click="submit">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+    </div>
 
 <table class="w-1/2 mx-auto divide-y divide-gray-200">
   <thead>
@@ -92,3 +205,18 @@
 
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      showModal: false,
+    };
+  },
+
+  methods: {
+    submit() {
+      // Handle form submission
+    },
+  },
+};
+</script>
