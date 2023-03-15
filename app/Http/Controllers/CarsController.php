@@ -30,10 +30,17 @@ class CarsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'vin' => 'unique:cars',
-        'license_plate'=> 'unique:cars',
-        'engine_code'=> 'unique:cars',
-        
+        'vin' => 'required|unique:cars',
+        'license_plate'=> 'required|unique:cars',
+        'brand'=> 'required',
+        'model'=> 'required',
+        'gearbox_type'=> 'required',
+        'colour'=> 'required',
+        'fuel_type'=> 'required',
+        'engine_capacity'=> 'required',
+        'power'=> 'required',
+        'engine_code'=> 'required|unique:cars',
+        'car_year'=> 'required'
         ]);
         
         $cars = new Cars();
