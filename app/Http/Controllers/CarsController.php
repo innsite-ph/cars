@@ -29,6 +29,13 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+        'vin' => 'unique:cars',
+        'license_plate'=> 'unique:cars',
+        'engine_code'=> 'unique:cars',
+        
+        ]);
+        
         $cars = new Cars();
         $cars->vin = $request->vin;
         $cars->license_plate = $request->license_plate; 

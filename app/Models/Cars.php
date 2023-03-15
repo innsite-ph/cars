@@ -10,7 +10,7 @@ class Cars extends Model
     use HasFactory;
     protected $table = 'cars';
     protected $fillable =[
-        'vin',
+        'vin' ,
         'license_plate',
         'brand',
         'model',
@@ -21,6 +21,20 @@ class Cars extends Model
         'power',
         'engine_code',
         'car_year'
+    ];
+
+    protected $rules =[
+        'vin' => 'unique',
+        'license_plate'=> 'unique',
+        'brand'=> 'unique',
+        'model'=> 'unique',
+        'gearbox_type'=> 'unique',
+        'colour'=> 'unique',
+        'fuel_type'=> 'unique',
+        'engine_capacity'=> 'unique',
+        'power'=> 'unique',
+        'engine_code'=> 'unique',
+        'car_year'=> 'unique'
     ];
     
 }
