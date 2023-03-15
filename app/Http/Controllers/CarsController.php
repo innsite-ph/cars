@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CarRequest;
 use App\Models\Cars;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,23 @@ class CarsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+       
         $cars = Cars::all();
+        $query = $request->input('query');
+        $results = Cars::where('brand', 'like', '%'.$query.'%')
+                 ->orWhere('colour', 'like', '%'.$query.'%')
+                 ->orWhere('model', 'like', '%'.$query.'%')
+                 ->orWhere('vin', 'like', '%'.$query.'%')
+                 ->orWhere('license_plate', 'like', '%'.$query.'%')
+                 ->orWhere('gearbox_type', 'like', '%'.$query.'%')
+                 ->orWhere('fuel_type', 'like', '%'.$query.'%')
+                 ->orWhere('engine_capacity', 'like', '%'.$query.'%')
+                 ->orWhere('power', 'like', '%'.$query.'%')
+                 ->orWhere('car_year', 'like', '%'.$query.'%')
+                 ->get();
+    return response()->json($results);
         return response()-> json($cars);
     }
 
@@ -27,22 +42,9 @@ class CarsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CarRequest $request)
     {
-        $request->validate([
-        'vin' => 'required|unique:cars',
-        'license_plate'=> 'required|unique:cars',
-        'brand'=> 'required',
-        'model'=> 'required',
-        'gearbox_type'=> 'required',
-        'colour'=> 'required',
-        'fuel_type'=> 'required',
-        'engine_capacity'=> 'required',
-        'power'=> 'required',
-        'engine_code'=> 'required|unique:cars',
-        'car_year'=> 'required'
-        ]);
-        
+        $cars = Cars::create($request->validated());
         $cars = new Cars();
         $cars->vin = $request->vin;
         $cars->license_plate = $request->license_plate; 
