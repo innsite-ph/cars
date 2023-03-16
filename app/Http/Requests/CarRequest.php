@@ -22,17 +22,17 @@ class CarRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'vin' => 'required|unique:cars',
-            'license_plate'=> 'required|unique:cars',
-            'brand'=> 'required',
-            'model'=> 'required',
-            'gearbox_type'=> 'required',
-            'colour'=> 'required',
-            'fuel_type'=> 'required',
-            'engine_capacity'=> 'required',
-            'power'=> 'required',
-            'engine_code'=> 'required|unique:cars',
-            'car_year'=> 'required'
+            'vin' => 'required|unique:cars',
+            'license_plate' => 'required|unique:cars',
+            'brand' => 'required',
+            'model' => 'required',
+            'gearbox_type' => 'required',
+            'colour' => 'required',
+            'fuel_type' => 'required',
+            'engine_capacity' => 'required',
+            'power' => 'required',
+            'engine_code' => 'required|unique:cars',
+            'car_year' => 'required'
         ];
     }
 }

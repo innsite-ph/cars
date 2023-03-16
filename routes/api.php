@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\CarsController;
-use App\Models\Cars;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Http\Request;
+use App\Models\Cars;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,3 +27,8 @@ Route::get('/cars/{id}', [CarsController::class, 'show']);
 Route::post('/cars', [CarsController::class, 'store']);
 Route::put('/cars/{id}', [CarsController::class, 'update']);
 Route::delete('/cars/{id}', [CarsController::class, 'destroy']);
+
+
+Route::post('/reservations', [ReservationController::class, 'store']);
+Route::get('/reservations', [ReservationController::class, 'index']);
+Route::put('/reservations/{id}', [ReservationController::class, 'update']);
