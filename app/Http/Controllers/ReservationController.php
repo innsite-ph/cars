@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Reservation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\ReservationRequest;
+
 class ReservationController extends Controller
 {
     /**
@@ -11,7 +14,8 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
+        $reservations = DB::table('reservations')->join('users', 'users.id', '=', 'reservations.user_id')->join('cars', 'cars.id', '=', 'reservations.car_id')->get();
+        return $reservations;
     }
 
     /**
@@ -25,16 +29,24 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ReservationRequest $request)
     {
-        $reservation = new Reservation();
-        $reservation->user_id = $request->car_id;
-        $reservation->car_id = $request->car_id;
-        $reservation->check_in_date = $request->check_in_date;
-        $reservation->check_out_date = $request->check_out_date;
-        $reservation->save();
+        $notAvailable = DB::table('reservations')->where('car_id', '=', $request->car_id)->where(function ($query) use ($request) {
+            $query->whereBetween('check_in_date', [$request->check_in_date, $request->check_out_date])
+                ->orWhereBetween('check_out_date', [$request->check_in_date, $request->check_out_date]);
+        })->first();
 
-        return response()->json($reservation);
+        // !$notAvailable == available yung bagong check in at at checkout
+        if (!$notAvailable) {
+            $reservation = new Reservation();
+            $reservation->user_id = $request->car_id;
+            $reservation->car_id = $request->car_id;
+            $reservation->check_in_date = $request->check_in_date;
+            $reservation->check_out_date = $request->check_out_date;
+            $reservation->save();
+            return '1';
+        } else
+            return '0';
     }
 
     /**
@@ -56,9 +68,17 @@ class ReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ReservationRequest $request, string $id)
     {
-        //
+        if (strtotime($request->check_in_date) < strtotime($request->check_out_date)) {
+            $reservations = Reservation::find($id);
+            $reservations->car_id = $request->car_id;
+            $reservations->user_id = $request->user_id;
+            $reservations->check_in_date = $request->check_in_date;
+            $reservations->check_out_date = $request->check_out_date;
+            $reservations->save();
+            return true;
+        } else return "check in date must be earlier than check out date!";
     }
 
     /**
@@ -66,6 +86,8 @@ class ReservationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        Reservation::destroy($id);
+        return response()->json(['message' => 'Reservation deleted successfully']);
     }
 }
