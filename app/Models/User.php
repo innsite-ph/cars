@@ -3,10 +3,26 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Seeder;
+use Laravel\Sanctum\HasApiTokens;
+use Database\Seeders\UsersTableSeeder;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+
+
+class DatabaseSeeder extends Seeder
+{
+    protected $seeder = [
+        UsersTableSeeder::class,
+    ];
+
+    public function run()
+    {
+        $this->call($this->seeder);
+    }
+}
+
 
 class User extends Authenticatable
 {
