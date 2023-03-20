@@ -29,7 +29,6 @@ class UserController extends Controller
             'token' => $user->createToken('Api Token'.$user->name )->plainTextToken
         ]);   
 
-
         }
        
 
