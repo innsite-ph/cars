@@ -101,11 +101,8 @@ window.addEventListener('load', () => {
 });
 
 function openEditModal(id) {
-  // find the car with the given id
   const car = cars.value.find(car => car.id === id)
-  // set the editedCar value to the car object
   editedCar.value = car
-  // show the edit modal
   editModal.value = true
 }
 
@@ -114,11 +111,8 @@ async function updateCar() {
   try {
     const response = await axios.put(`http://127.0.0.1:8000/api/cars/${editedCar.value.id}`, editedCar.value)
     console.log(response.data)
-    // find the index of the edited car in the cars array
     const index = cars.value.findIndex(car => car.id === editedCar.value.id)
-    // update the car object in the cars array with the edited car data
     cars.value[index] = response.data
-    // close the edit modal
     editModal.value = false
   } catch (error) {
     console.error(error)
@@ -155,15 +149,15 @@ axios.get('http://127.0.0.1:8000/api/cars')
   aria-label="Search"
   aria-describedby="button-addon3"
 />
-        <button
-          @click="fetchData"
-          class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
-          type="button"
-          id="button-addon3"
-          data-te-ripple-init
-        >
-          Search
-        </button>
+            <!-- <button
+            @click="fetchData"
+            class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
+            type="button"
+            id="button-addon3"
+            data-te-ripple-init
+            >
+            Search
+            </button> -->
       </div>
     </div>
   </div>
