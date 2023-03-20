@@ -3,6 +3,8 @@
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 
+import { RouterView } from "vue-router";
+
 const cars = ref([])
 const searchQuery = ref("")
 
@@ -130,7 +132,13 @@ axios.get('http://127.0.0.1:8000/api/cars')
 
 </script>
 
+
 <template>
+<!--
+<Top />
+    <router-view />
+    <Foot /> -->
+
   <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
     Vehicle Rental Service
   </h2>
