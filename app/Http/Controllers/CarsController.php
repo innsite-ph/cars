@@ -61,6 +61,8 @@ class CarsController extends Controller
         // $cars->car_year = $request->car_year;
         // $cars->save();
 
+
+
         return response()->json($cars);
     }
 
@@ -70,7 +72,9 @@ class CarsController extends Controller
     public function show(string $id)
     {
         $car = Cars::all()->where('id', $id);
+
         return response()->json($car);
+
     }
 
     /**

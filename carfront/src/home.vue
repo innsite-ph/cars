@@ -3,8 +3,6 @@
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 
-import { RouterView } from "vue-router";
-
 const cars = ref([])
 const searchQuery = ref("")
 
@@ -133,12 +131,15 @@ axios.get('http://127.0.0.1:8000/api/cars')
 </script>
 
 
-<template>
-<!--
-<Top />
-    <router-view />
-    <Foot /> -->
 
+<template>
+<top/>
+    <div v-if="isLoggedIn">
+    Welcome Back! {{ user }}
+  </div>
+  <div v-else>
+    Please login to access the content.
+  </div>
   <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
     Vehicle Rental Service
   </h2>
@@ -171,8 +172,13 @@ axios.get('http://127.0.0.1:8000/api/cars')
   </div>
 
   <div class="w-full flex justify-end items-center mb-4">
+    <select id="items-per-page-select" class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage" @change="changeItemsPerPage">
+  <option value="5" selected>5</option>
+  <option value="10" >10</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+</select>
     <div class="order-last ml-12">
-
       <button @click="showModal = true" style="margin-right: 250px;"
         class="modal-open inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
@@ -182,8 +188,6 @@ axios.get('http://127.0.0.1:8000/api/cars')
         </svg>
         Add a Car
       </button>
-
-
     </div>
   </div>
 
@@ -340,7 +344,6 @@ axios.get('http://127.0.0.1:8000/api/cars')
       </div>
     </div>
   </div>
-
 <div class="table-responsive">
   <table class="w-1/2 mx-auto divide-y divide-gray-200">
     <thead>
@@ -366,7 +369,8 @@ axios.get('http://127.0.0.1:8000/api/cars')
       </tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
-      <tr v-for="(car, index) in cars" :key="index">
+      <!-- <tr v-for="(car, index) in cars" :key="index"> -->
+        <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ car.vin }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.license_plate }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.brand }}</td>
@@ -379,14 +383,37 @@ axios.get('http://127.0.0.1:8000/api/cars')
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.engine_code }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.car_year }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-          <button @click="() => openEditModal(car.id)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
-        <a href="#" @click.prevent="deleteCar(car.id)" class="text-red-600 hover:text-red-900 ml-4">Delete</a>
+            <button @click="() => openEditModal(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2" viewBox="0 0 20 20" fill="currentColor">
+    <path fill-rule="evenodd" d="M3 13.414V17a1 1 0 001 1h3.586a1 1 0 00.707-.293l9-9a1 1 0 000-1.414l-3.293-3.293a1 1 0 00-1.414 0l-9 9a1 1 0 00-.293.707zm12.293-8.707a1 1 0 010 1.414l-1.586 1.586-3-3L11 3h3a1 1 0 011 1v3zM5 15h6.586L15 10.414v-3L9.414 15H5v3H3v-3a2 2 0 012-2z" clip-rule="evenodd" />
+  </svg>
+  Edit
+</button>
+<button style="margin-left: 3px;" @click="() => deleteCar(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2" viewBox="0 0 20 20" fill="currentColor">
+    <path fill-rule="evenodd" d="M16.707 3.293a1 1 0 00-1.414 0L10 8.586l-5.293-5.293a1 1 0 00-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 001.414 1.414L10 11.414l5.293 5.293a1 1 0 001.414-1.414L11.414 10l5.293-5.293a1 1 0 000-1.414z" clip-rule="evenodd" />
+  </svg>
+  Delete
+</button>
+
 
       </td>
     </tr>
-    <!-- ... -->
   </tbody>
-</table></div>
+</table>
+<br>
+<div style="margin-left: 1600px;">
+ <button class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md mr-2"
+            :disabled="currentPage === 1"
+            @click="prevPage">Previous</button>
+    <button class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md"
+            :disabled="currentPage === totalPages"
+            @click="nextPage">Next</button>
+
+
+</div>
+</div>
+
 
 
 <div v-if="editModal" class="fixed z-10 inset-0 overflow-y-auto">
@@ -542,22 +569,83 @@ axios.get('http://127.0.0.1:8000/api/cars')
       </div>
     </div>
   </div>
-
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<foot/>
 </template>
-<!--
 <script>
+import { ref, computed} from 'vue';
+
+import top from './include/top.vue';
+import foot from './include/foot.vue';
+
 export default {
+
+  components: { top, foot },
   data() {
     return {
-      showModal: false,
-    };
+      isLoggedIn: false,
+      user: '',
+      currentPage: 1,
+    itemsPerPage: 5,
+    cars: []
+    }
   },
+  mounted() {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    if (token && user) {
+      this.isLoggedIn = true;
+      this.user = JSON.parse(user).name;
+    }
+    axios.get('http://127.0.0.1:8000/api/cars')
+    .then(response => {
+      this.cars = response.data;
+      console.log()
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  },
+  computed: {
+  firstIndex() {
+    return (this.currentPage - 1) * this.itemsPerPage;
+  },
+  lastIndex() {
+    return this.currentPage * this.itemsPerPage;
+  },
+  totalPages() {
+    return Math.ceil(this.cars.length / this.itemsPerPage);
+  }
+},
+methods: {
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      console.log('currentPage:', this.currentPage);
+    }
+  },
+  nextPage() {
+    if (this.currentPage < Math.ceil(this.cars.length / this.itemsPerPage)) {
+      this.currentPage++;
+      console.log('currentPage:', this.currentPage);
+    }
+  }
+}
 
-  methods: {
-    submit() {
-      // Handle form submission
-    },
-  },
-};
-</script> -->
+
+
+}
+
+</script>
