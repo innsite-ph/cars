@@ -31,25 +31,6 @@ class UserController extends Controller
 
 
             }
-//         public function login(LoginUserRequest $request)
-// {
-//     if(!Auth::attempt(['email' => $request->email, 'password' => $request->password]))
-//         return $this->error('','Credentials do not match', 401);
-
-//     $user = $request->user();
-//     return $user->createToken('Api Token'.$user->name )->plainTextToken;
-// }
-
-// public function login(LoginUserRequest $request)
-// {
-//     if(!Auth::attempt(['email' => $request->email, 'password' => $request->password]))
-//         return response()->json(['message' => 'Credentials do not match'], 401);
-
-//     $user = $request->user();
-//     $token = $user->createToken('Api Token'.$user->name)->plainTextToken;
-//     return response()->json(['token' => $token]);
-// }
-
 
     public function register(StoreUserRequest $request)
     {
@@ -74,6 +55,9 @@ class UserController extends Controller
                 'message' =>'Logged out'
             ]);
         }
+
+
+
 
     public function index()
     {
