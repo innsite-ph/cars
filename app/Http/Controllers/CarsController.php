@@ -13,6 +13,7 @@ class CarsController extends Controller
      */
     public function index(Request $request)
     {
+
         $cars = Cars::all();
         $query = $request->input('query');
 
@@ -61,6 +62,8 @@ class CarsController extends Controller
         // $cars->save();
 
         return response()-> json($cars);
+
+
         return response()->json($cars);
     }
 
@@ -72,6 +75,9 @@ class CarsController extends Controller
         $car = Cars::all()->where('id', $id);
         return response()-> json($car);
         return response()->json($car);
+
+        return response()->json($car);
+
     }
 
     /**
