@@ -13,25 +13,24 @@ class CarsController extends Controller
      */
     public function index(Request $request)
     {
-    //     if(!Auth::attempt(['email' => $request->email, 'password' => $request->password]))
-    //     return response()->json(['message' => 'Unauthorized'], 401);
+
         $cars = Cars::all();
         $query = $request->input('query');
 
         $results = Cars::when($request->input('query'), function ($query, $input) {
-            return $query->where('brand', 'like', '%'.$input.'%')
-                        ->orWhere('colour', 'like', '%'.$input.'%')
-                        ->orWhere('model', 'like', '%'.$input.'%')
-                        ->orWhere('vin', 'like', '%'.$input.'%')
-                        ->orWhere('license_plate', 'like', '%'.$input.'%')
-                        ->orWhere('gearbox_type', 'like', '%'.$input.'%')
-                        ->orWhere('fuel_type', 'like', '%'.$input.'%')
-                        ->orWhere('engine_capacity', 'like', '%'.$input.'%')
-                        ->orWhere('power', 'like', '%'.$input.'%')
-                        ->orWhere('car_year', 'like', '%'.$input.'%');
+            return $query->where('brand', 'like', '%' . $input . '%')
+                ->orWhere('colour', 'like', '%' . $input . '%')
+                ->orWhere('model', 'like', '%' . $input . '%')
+                ->orWhere('vin', 'like', '%' . $input . '%')
+                ->orWhere('license_plate', 'like', '%' . $input . '%')
+                ->orWhere('gearbox_type', 'like', '%' . $input . '%')
+                ->orWhere('fuel_type', 'like', '%' . $input . '%')
+                ->orWhere('engine_capacity', 'like', '%' . $input . '%')
+                ->orWhere('power', 'like', '%' . $input . '%')
+                ->orWhere('car_year', 'like', '%' . $input . '%');
         })->get();
-    return response()->json($results);
-        return response()-> json($cars);
+        return response()->json($results);
+        return response()->json($cars);
     }
 
     /**
@@ -62,7 +61,9 @@ class CarsController extends Controller
         // $cars->car_year = $request->car_year;
         // $cars->save();
 
-        return response()-> json($cars);
+
+
+        return response()->json($cars);
     }
 
     /**
@@ -71,7 +72,9 @@ class CarsController extends Controller
     public function show(string $id)
     {
         $car = Cars::all()->where('id', $id);
-        return response()-> json($car);
+
+        return response()->json($car);
+
     }
 
     /**
@@ -101,7 +104,7 @@ class CarsController extends Controller
         $cars->car_year = $request->car_year;
         $cars->save();
 
-        return response()-> json($cars);
+        return response()->json($cars);
     }
 
     /**

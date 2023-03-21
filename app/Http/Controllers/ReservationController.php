@@ -31,22 +31,23 @@ class ReservationController extends Controller
      */
     public function store(ReservationRequest $request)
     {
-        $notAvailable = DB::table('reservations')->where('car_id', '=', $request->car_id)->where(function ($query) use ($request) {
+        $notAvailable= DB::table('reservations')->where('car_id', '=', $request->car_id)->where(function ($query) use ($request) {
             $query->whereBetween('check_in_date', [$request->check_in_date, $request->check_out_date])
                 ->orWhereBetween('check_out_date', [$request->check_in_date, $request->check_out_date]);
-        })->first();
-
-        // !$notAvailable == available yung bagong check in at at checkout
-        if (!$notAvailable) {
-            $reservation = new Reservation();
-            $reservation->user_id = $request->car_id;
-            $reservation->car_id = $request->car_id;
-            $reservation->check_in_date = $request->check_in_date;
-            $reservation->check_out_date = $request->check_out_date;
-            $reservation->save();
-            return '1';
-        } else
-            return '0';
+        })->get();
+        if (strtotime($request->check_in_date) < strtotime($request->check_out_date)) {
+            if (count($notAvailable) == 0) {
+                $cars = Reservation::create($request->validated());
+                // $reservation = new Reservation();
+                // $reservation->user_id = $request->car_id;
+                // $reservation->car_id = $request->car_id;
+                // $reservation->check_in_date = $request->check_in_date;
+                // $reservation->check_out_date = $request->check_out_date;
+                // $reservation->save();
+                return '1';
+            } else
+                return '0';
+        } else return "check in date must be earlier than check out date!";
     }
 
     /**
