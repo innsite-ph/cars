@@ -12,7 +12,7 @@ import Register from './account/register.vue'
 import Add from './car/add.vue'
 
 const routes = [
-    { path: '/', component: Home },
+    { path: '/', component: Home, meta: { requiresAuth: true }},
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/top', component: Top },
@@ -24,5 +24,15 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+router.beforeEach((to, from, next) => {
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+    const token = localStorage.getItem('token')
+    const user = localStorage.getItem('user')
 
+    if (requiresAuth && (!token || !user)) {
+      next('/login')
+    } else {
+      next()
+    }
+  })
 createApp(App).use(router).mount('#app')
