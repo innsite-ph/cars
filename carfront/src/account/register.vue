@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 import top from '../include/top.vue';
+import Swal from 'sweetalert2';
 
 import foot from '../include/foot.vue';
 
@@ -19,17 +20,40 @@ export default {
   },
   methods: {
     async registerUser() {
-      if (this.user.password !== this.confirmPassword) {
-        return alert('Passwords do not match');
-      }
+  if (this.user.password !== this.confirmPassword) {
+    return alert('Passwords do not match');
+  }
 
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/register', this.user);
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    },
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/register', this.user);
+    console.log(response.data);
+    Swal.fire({
+  title: 'Your Registration is Successful!! ',
+  width: 600,
+  padding: '3em',
+  backdrop: `
+    url("https://media.giphy.com/media/3oKGzi6qBykxaZyg8g/giphy.gif")
+    left top
+    no-repeat
+    fixed
+    rgba(0, 0, 0, 0.4)
+  `,
+  customClass: {
+    backdrop: 'my-backdrop-class'
+  },
+  onOpen: () => {
+    const backdrop = document.querySelector('.my-backdrop-class');
+    backdrop.style.backgroundSize = '10%'; // Set background size to 50%
+  }
+}).then(() => {
+      // Redirect to login page
+      this.$router.push('/login');
+    });
+  } catch (error) {
+    console.error(error);
+  }
+},
+
   },
 };
 </script>
