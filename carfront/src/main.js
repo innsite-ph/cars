@@ -6,18 +6,20 @@ import './assets/css/main.css'
 import App from './App.vue'
 import Top from './include/top.vue'
 import Foot from './include/foot.vue'
-import Home from './home.vue'
+import Car from './home.vue'
 import Login from './account/login.vue'
 import Register from './account/register.vue'
-import Add from './car/add.vue'
+import Index from './car/index.vue'
+import Reservation from './car/reservation.vue'
 
 const routes = [
-    { path: '/', component: Home, meta: { requiresAuth: true }},
+    { path: '/Car', component: Car, meta: { requiresAuth: true }},
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/top', component: Top },
     { path: '/foot', component: Foot },
-    { path: '/add', component: Add },
+    { path: '/', component: Index, meta: { requiresAuth: true } },
+    { path: '/reservation', component: Reservation, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
@@ -30,7 +32,10 @@ router.beforeEach((to, from, next) => {
     const user = localStorage.getItem('user')
 
     if (requiresAuth && (!token || !user)) {
+
       next('/login')
+
+
     } else {
       next()
     }

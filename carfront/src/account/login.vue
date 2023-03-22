@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 import top from '../include/top.vue';
 import foot from '../include/foot.vue';
@@ -7,7 +8,7 @@ import foot from '../include/foot.vue';
 const API_URL = 'http://127.0.0.1:8000/api/login';
 
 export default {
-  components: { top ,foot},
+  components: { top, foot },
 
   data() {
     return {
@@ -16,32 +17,63 @@ export default {
       error: '',
     }
   },
-  methods: {
-    login() {
-      axios.post('http://127.0.0.1:8000/api/login', {
-        email: this.email,
-        password: this.password,
-      })
-      .then(response => {
-        // Handle successful login
-        const token = response.data;
-        console.log(token)
-        localStorage.setItem('token', token['data']['token']);
-        localStorage.setItem('user', JSON.stringify(token['data']['user']));
-        // Redirect to home page
-        this.$router.push('/');
-        // Store the token in local storage or Vuex store\
-        // Redirect to dashboard or home page
+  created() {
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+  if (token && user) {
+    this.isLoggedIn = true;
+    this.user = JSON.parse(user).name;
+  }
+},
+mounted() {
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+  if (token && user) {
+    this.isLoggedIn = true;
+    this.user = JSON.parse(user).name;
+  }
+},
+methods: {
+  login() {
+    axios.post(API_URL, {
+      email: this.email,
+      password: this.password,
+    })
+    .then(response => {
+      const token = response.data;
+      localStorage.setItem('token', token['data']['token']);
+      localStorage.setItem('user', JSON.stringify(token['data']['user']));
+      this.isLoggedIn = true;
+      this.user = token['data']['user']['name'];
 
-      })
-      .catch(error => {
-        // Handle login error
-        this.error = error.response.data.message;
-console.log(this.error)
+      // Show success message
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
       });
-    },
+
+      Toast.fire({
+        icon: 'success',
+        title: `Welcome Back! ${this.user}.  Signed in successfully`
+      });
+
+      this.$router.push('/');
+    })
+    .catch(error => {
+      this.error = error.response.data.message;
+      console.log(this.error);
+    });
   },
+},
 }
+
 
 </script>
 

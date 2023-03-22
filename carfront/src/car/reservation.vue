@@ -210,7 +210,7 @@ axios.get('http://127.0.0.1:8000/api/cars')
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M9 4h6a2 2 0 012 2v2h3a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2v-8a2 2 0 012-2h3V6a2 2 0 012-2z" />
         </svg>
-        Add a Car
+        Book a Reservation
       </button>
     </div>
   </div>
@@ -222,7 +222,7 @@ axios.get('http://127.0.0.1:8000/api/cars')
       <div class="modal bg-white rounded-lg overflow-hidden" style="z-index: 9999">
         <div style="width: 690px;" class="px-4 py-5 sm:p-12">
           <div class="flex items-start justify-between">
-            <h3 class="text-lg font-medium text-gray-900">Add Vehicle</h3>
+            <h3 class="text-lg font-medium text-gray-900">Book a Reservation</h3>
             <button @click="showModal = false"
               class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
               <span class="sr-only">Close</span>
@@ -627,8 +627,8 @@ axios.get('http://127.0.0.1:8000/api/cars')
 <script>
 import { ref, computed} from 'vue';
 
-import top from './include/top.vue';
-import foot from './include/foot.vue';
+import top from '../include/top.vue';
+import foot from '../include/foot.vue';
 
 export default {
 
