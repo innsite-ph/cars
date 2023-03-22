@@ -18,34 +18,36 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
 
-    public function login(LoginUserRequest $request)
+        public function login(LoginUserRequest $request)
+        {
+            if(!Auth::attempt(['email' => $request->email, 'password' => $request->password]))
+            return $this->error('','Credentials do not match', 401);
+
+            $user = User::where('email',$request->email) ->first();
+            return $this ->success([
+                'user' => $user,
+                'token' => $user->createToken('Api Token'.$user->name )->plainTextToken
+            ]);
+
+
+            }
+
+    public function register(StoreUserRequest $request)
     {
-        if(!Auth::attempt(['email' => $request->email, 'password' => $request->password]))
-        return $this->error('','Credentials do not match', 401);
+        $request->validated($request->all());
+        $user = User::create([
+            'name' =>$request->name,
+            'email'=>$request->email,
+            'password'=> Hash::make($request->password)
+        ]);
+        return $user->createToken('Api Token' . $user->name)->plainTextToken;
+        // return $this->success([
+        //     'user'=>$user,
+        //     'token'=>$user->createToken('Api Token' . $user->name)->plainTextToken
+        // ]);
+    }
 
-        $user = User::where('email',$request->email) ->first();
-        return $this ->success([
-            'user' => $user,
-            'token' => $user->createToken('Api Token'.$user->name )->plainTextToken
-        ]);   
 
-        }
-       
-
-
-public function register(StoreUserRequest $request)
-{
-    $request->validated($request->all());
-    $user = User::create([
-        'name' =>$request->name,
-        'email'=>$request->email,
-        'password'=> Hash::make($request->password)
-    ]);
-    return $this->success([
-        'user'=>$user,
-        'token'=>$user->createToken('Api Token' . $user->name)->plainTextToken
-    ]);
-}
         public function logout()
         {
             Auth::user()->currentAccessToken()->delete();
