@@ -38,7 +38,7 @@ Route::get('/cars/{id}', [CarsController::class, 'show']);
 Route::post('/cars', [CarsController::class, 'store']);
 Route::put('/cars/{id}', [CarsController::class, 'update']);
 Route::delete('/cars/{id}', [CarsController::class, 'destroy']);
-
+Route::get('/car/search', [CarsController::class, 'search_car']);
 
 Route::post('/reservations', [ReservationController::class, 'store']);
 Route::get('/reservations', [ReservationController::class, 'index']);
