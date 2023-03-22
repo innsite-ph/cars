@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CarRequest;
 use App\Models\Cars;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Http\Requests\CarRequest;
 
 class CarsController extends Controller
 {
@@ -61,7 +62,7 @@ class CarsController extends Controller
         // $cars->car_year = $request->car_year;
         // $cars->save();
 
-        return response()-> json($cars);
+        return response()->json($cars);
 
 
         return response()->json($cars);
@@ -73,11 +74,10 @@ class CarsController extends Controller
     public function show(string $id)
     {
         $car = Cars::all()->where('id', $id);
-        return response()-> json($car);
+        return response()->json($car);
         return response()->json($car);
 
         return response()->json($car);
-
     }
 
     /**
@@ -117,5 +117,53 @@ class CarsController extends Controller
     {
         Cars::destroy($id);
         return response()->json(['message' => 'Cars deleted successfully']);
+    }
+
+    public function search_car(Request $request)
+    {
+        $car = $request->input("car");
+        $checkInDate = strtotime($request->input('checkInDate'));
+        $checkOutDate = strtotime($request->input('checkOutDate'));
+        $ids = [];
+        $cars = Cars::select('brand', 'id', 'colour', 'model', 'power', 'fuel_type', 'license_plate', 'car_year')->where('brand', 'like', '%' . $car . '%')
+            ->orWhere('colour', 'like', '%' . $car . '%')
+            ->orWhere('model', 'like', '%' . $car . '%')
+            ->orWhere('vin', 'like', '%' . $car . '%')
+            ->orWhere('license_plate', 'like', '%' . $car . '%')
+            ->orWhere('gearbox_type', 'like', '%' . $car . '%')
+            ->orWhere('fuel_type', 'like', '%' . $car . '%')
+            ->orWhere('engine_capacity', 'like', '%' . $car . '%')
+            ->orWhere('power', 'like', '%' . $car . '%')
+            ->orWhere('car_year', 'like', '%' . $car . '%')->get();
+        $reservations = Reservation::select('check_in_date', 'check_out_date', 'car_id')->get();
+        for ($c = 0; $c < count($cars); $c++) {
+            $not_available = true;
+            for ($r = 0; $r < count($reservations); $r++) {
+                // CHECK IF RESERVATION IS FOR THE CAR
+                if ($reservations[$r]['car_id'] == $cars[$c]['id']) {
+                    // CHECK IF CAR IS ALREADY INSIDE IDS
+                    if (!in_array($cars[$c]['id'], $ids)) {
+                        if ($checkInDate > strtotime($reservations[$r]['check_in_date']) && $checkInDate < strtotime($reservations[$r]['check_out_date'])) {
+                            array_push($ids, array('car_id' => $cars[$c]['id'], 'not_available' => true, 'car_year' => $cars[$c]['car_year'], 'license_plate' => $cars[$c]['license_plate'], 'fuel_type' => $cars[$c]['fuel_type'], 'power' => $cars[$c]['power'], 'model' => $cars[$c]['model'], 'colour' => $cars[$c]['colour'], 'brand' => $cars[$c]['brand']));
+                            $not_available = false;
+                            break;
+                        } else if ($checkOutDate > strtotime($reservations[$r]['check_in_date']) && $checkOutDate < strtotime($reservations[$r]['check_out_date'])) {
+                            array_push($ids, array('car_id' => $cars[$c]['id'], 'not_available' => true, 'car_year' => $cars[$c]['car_year'], 'license_plate' => $cars[$c]['license_plate'], 'fuel_type' => $cars[$c]['fuel_type'], 'power' => $cars[$c]['power'], 'model' => $cars[$c]['model'], 'colour' => $cars[$c]['colour'], 'brand' => $cars[$c]['brand']));
+                            $not_available = false;
+                            break;
+                        } else if ($checkOutDate > strtotime($reservations[$r]['check_out_date']) && $checkInDate < strtotime($reservations[$r]['check_in_date'])) {
+                            // condition kapag yung check in at check out ay nasa loob ng input na check in at check out. dapat not available din kapag ganon
+                            array_push($ids, array('car_id' => $cars[$c]['id'], 'not_available' => true, 'car_year' => $cars[$c]['car_year'], 'license_plate' => $cars[$c]['license_plate'], 'fuel_type' => $cars[$c]['fuel_type'], 'power' => $cars[$c]['power'], 'model' => $cars[$c]['model'], 'colour' => $cars[$c]['colour'], 'brand' => $cars[$c]['brand']));
+                            $not_available = false;
+                            break;
+                        }
+                    }
+                } else continue;
+            }
+            if ($not_available) {
+                array_push($ids, array('car_id' => $cars[$c]['id'], 'not_available' => false, 'car_year' => $cars[$c]['car_year'], 'license_plate' => $cars[$c]['license_plate'], 'fuel_type' => $cars[$c]['fuel_type'], 'power' => $cars[$c]['power'], 'model' => $cars[$c]['model'], 'colour' => $cars[$c]['colour'], 'brand' => $cars[$c]['brand']));
+            }
+        }
+        return $ids;
     }
 }
