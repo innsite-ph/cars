@@ -37,13 +37,7 @@ class ReservationController extends Controller
         })->get();
         if (strtotime($request->check_in_date) < strtotime($request->check_out_date)) {
             if (count($notAvailable) == 0) {
-                $cars = Reservation::create($request->validated());
-                // $reservation = new Reservation();
-                // $reservation->user_id = $request->car_id;
-                // $reservation->car_id = $request->car_id;
-                // $reservation->check_in_date = $request->check_in_date;
-                // $reservation->check_out_date = $request->check_out_date;
-                // $reservation->save();
+                Reservation::create($request->validated());
                 return '1';
             } else
                 return '0';

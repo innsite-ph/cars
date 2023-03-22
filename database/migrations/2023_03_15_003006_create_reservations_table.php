@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('car_id');
             $table->dateTime('check_in_date');
             $table->dateTime('check_out_date');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('car_id')->references('id')->on('cars');
         });
     }
