@@ -132,7 +132,7 @@ window.addEventListener('load', () => {
   fetchData();
 });
 
-function openEditModal(id) {
+function reserveModal(id) {
   const car = cars.value.find(car => car.id === id)
   editedCar.value = car
   editModal.value = true
@@ -171,39 +171,59 @@ axios.get('http://127.0.0.1:8000/api/cars')
   <br><br><br>
 <!--
   @input="fetchData" -->
-  <div class="flex justify-center">
-    <div class="mb-3 xl:w-96">
-      <div class="relative mb-4 flex w-full flex-wrap items-stretch">
+
+    <div class="relative mb-4 flex w-full flex-wrap items-stretch">
+        <input style="margin-left: 670px"
+    v-model="searchQuery"
+    type="search"
+    class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+    placeholder="Search"
+    aria-label="Search"
+    aria-describedby="button-addon3"
+  />
+
+      <div class="relative">
+        <label for="checkin-date" class="sr-only">Check-in Date</label>
         <input
-  v-model="searchQuery"
-  type="search"
-  class="relative m-0 -mr-px block w-[1%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
-  placeholder="Search"
-  aria-label="Search"
-  aria-describedby="button-addon3"
-/>
-            <!-- <button
-            @click="fetchData"
-            class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
-            type="button"
-            id="button-addon3"
-            data-te-ripple-init
-            >
-            Search
-            </button> -->
+          id="checkin-date"
+          v-model="checkinDate"
+          type="date"
+          class="relative z-10 m-0 -ml-px block w-32 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+          placeholder="Check-in"
+        />
       </div>
+
+      <div class="relative">
+        <label for="checkout-date" class="sr-only">Check-out Date</label>
+        <input
+          id="checkout-date"
+          v-model="checkoutDate"
+          type="date"
+          class="relative z-10 m-0 -ml-px block w-32 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+          placeholder="Check-out"
+        />
+      </div>
+
+      <button
+        @click="fetchData"
+        class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
+        type="button"
+        id="button-addon3"
+        data-te-ripple-init
+      >
+        Search
+      </button>
     </div>
-  </div>
 
   <div class="w-full flex justify-end items-center mb-4">
-    <select id="items-per-page-select" class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage" @change="changeItemsPerPage">
+    <select style="margin-right: 112px;" id="items-per-page-select" class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage" @change="changeItemsPerPage">
   <option value="5" selected>5</option>
   <option value="10" >10</option>
   <option value="15">15</option>
   <option value="20">20</option>
 </select>
     <div class="order-last ml-12">
-      <button @click="showModal = true" style="margin-right: 250px;"
+      <!-- <button @click="showModal = true" style="margin-right: 250px;"
         class="modal-open inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
@@ -211,7 +231,7 @@ axios.get('http://127.0.0.1:8000/api/cars')
             d="M9 4h6a2 2 0 012 2v2h3a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2v-8a2 2 0 012-2h3V6a2 2 0 012-2z" />
         </svg>
         Book a Reservation
-      </button>
+      </button> -->
     </div>
   </div>
 
@@ -233,130 +253,27 @@ axios.get('http://127.0.0.1:8000/api/cars')
           </div>
 
           <div class="mt-5">
-            <form class="space-y-6" @submit.prevent="createCar">
+            <form @submit.prevent="submitForm" class="space-y-4">
+                <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">Car ID:</label>
+        <input type="text" v-model="carId" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">User ID:</label>
+        <input type="text" v-model="userId" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
+      <div class="flex flex-col">
 
-              <div>
-                <label for="brand" class="block text-sm font-medium text-gray-700">
-                  Car Brand
-                </label>
-                <div class="mt-1">
-                  <input id="brand" name="brand" type="text" autocomplete="off" v-model="newCar.brand" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
+        <label class="text-lg font-medium mb-2">Check-in Date:</label>
+        <input type="date" v-model="checkin" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">Check-out Date:</label>
+        <input type="date" v-model="checkout" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
 
-              <div>
-                <label for="model" class="block text-sm font-medium text-gray-700">
-                  Car Model
-                </label>
-                <div class="mt-1">
-                  <input id="model" name="model" type="text" autocomplete="off" v-model="newCar.model" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="year" class="block text-sm font-medium text-gray-700">
-                  Car Year
-                </label>
-                <div class="mt-1">
-                  <input id="year" name="car_year" type="date" autocomplete="off" v-model="newCar.car_year" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="color" class="block text-sm font-medium text-gray-700">
-                  Car Color
-                </label>
-                <div class="mt-1">
-                  <input id="color" name="colour" type="text" autocomplete="off" v-model="newCar.colour" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="license_plate" class="block text-sm font-medium text-gray-700">
-                  Car License Plate
-                </label>
-                <div class="mt-1">
-                  <input id="license_plate" name="license_plate" type="text" autocomplete="off"
-                    v-model="newCar.license_plate" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="gearbox_type" class="block text-sm font-medium text-gray-700">
-                  Car Gearbox Type
-                </label>
-                <div class="mt-1">
-                  <input id="gearbox_type" name="gearbox_type" type="text" autocomplete="off"
-                    v-model="newCar.gearbox_type" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="fuel_type" class="block text-sm font-medium text-gray-700">
-                  Car Fuel Type
-                </label>
-                <div class="mt-1">
-                  <input id="fuel_type" name="fuel_type" type="text" autocomplete="off" v-model="newCar.fuel_type"
-                    required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="power" class="block text-sm font-medium text-gray-700">
-                  Car Horse Power
-                </label>
-                <div class="mt-1">
-                  <input id="power" name="power" type="text" autocomplete="off" v-model="newCar.power" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="engine_capacity" class="block text-sm font-medium text-gray-700">
-                  Car Engine Capacity
-                </label>
-                <div class="mt-1">
-                  <input id="engine_capacity" name="engine_capacity" type="text" autocomplete="off"
-                    v-model="newCar.engine_capacity" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="engine_code" class="block text-sm font-medium text-gray-700">
-                  Car Engine Code
-                </label>
-                <div class="mt-1">
-                  <input id="engine_code" name="engine_code" type="text" autocomplete="off" v-model="newCar.engine_code"
-                    required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="vin" class="block text-sm font-medium text-gray-700">
-                  Car Vehicle Identification Number
-                </label>
-                <div class="mt-1">
-                  <input id="vin" name="vin" type="text" autocomplete="off" v-model="newCar.vin" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <button type="submit"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Register
-                </button>
-              </div>
-            </form>
+      <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Submit</button>
+    </form>
           </div>
         </div>
         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -407,18 +324,18 @@ axios.get('http://127.0.0.1:8000/api/cars')
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.engine_code }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.car_year }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-            <button @click="() => openEditModal(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button @click="() => reserveModal(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2" viewBox="0 0 20 20" fill="currentColor">
     <path fill-rule="evenodd" d="M3 13.414V17a1 1 0 001 1h3.586a1 1 0 00.707-.293l9-9a1 1 0 000-1.414l-3.293-3.293a1 1 0 00-1.414 0l-9 9a1 1 0 00-.293.707zm12.293-8.707a1 1 0 010 1.414l-1.586 1.586-3-3L11 3h3a1 1 0 011 1v3zM5 15h6.586L15 10.414v-3L9.414 15H5v3H3v-3a2 2 0 012-2z" clip-rule="evenodd" />
   </svg>
-  Edit
+  Reserve
 </button>
-<button style="margin-left: 3px;" @click="() => deleteCar(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+<!-- <button style="margin-left: 3px;" @click="() => deleteCar(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2" viewBox="0 0 20 20" fill="currentColor">
     <path fill-rule="evenodd" d="M16.707 3.293a1 1 0 00-1.414 0L10 8.586l-5.293-5.293a1 1 0 00-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 001.414 1.414L10 11.414l5.293 5.293a1 1 0 001.414-1.414L11.414 10l5.293-5.293a1 1 0 000-1.414z" clip-rule="evenodd" />
   </svg>
   Delete
-</button>
+</button> -->
 
 
       </td>
@@ -474,130 +391,27 @@ axios.get('http://127.0.0.1:8000/api/cars')
           </div>
 
           <div class="mt-5">
-            <form class="space-y-6" @submit.prevent="updateCar">
+            <form @submit.prevent="submitForm" class="space-y-4">
+                <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">Car ID:</label>
+        <input type="text" v-model="carId" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">User ID:</label>
+        <input type="text" v-model="userId" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
+      <div class="flex flex-col">
 
-              <div>
-                <label for="brand" class="block text-sm font-medium text-gray-700">
-                  Car Brand
-                </label>
-                <div class="mt-1">
-                  <input id="brand" name="brand" type="text" autocomplete="off" v-model="editedCar.brand" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
+        <label class="text-lg font-medium mb-2">Check-in Date:</label>
+        <input type="date" v-model="checkin" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-medium mb-2">Check-out Date:</label>
+        <input type="date" v-model="checkout" required class="border border-gray-300 rounded-lg py-2 px-3">
+      </div>
 
-              <div>
-                <label for="model" class="block text-sm font-medium text-gray-700">
-                  Car Model
-                </label>
-                <div class="mt-1">
-                  <input id="model" name="model" type="text" autocomplete="off" v-model="editedCar.model" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="year" class="block text-sm font-medium text-gray-700">
-                  Car Year
-                </label>
-                <div class="mt-1">
-                  <input id="year" name="car_year" type="date" autocomplete="off" v-model="editedCar.car_year" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="color" class="block text-sm font-medium text-gray-700">
-                  Car Color
-                </label>
-                <div class="mt-1">
-                  <input id="color" name="colour" type="text" autocomplete="off" v-model="editedCar.colour" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="license_plate" class="block text-sm font-medium text-gray-700">
-                  Car License Plate
-                </label>
-                <div class="mt-1">
-                  <input id="license_plate" name="license_plate" type="text" autocomplete="off"
-                    v-model="editedCar.license_plate" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="gearbox_type" class="block text-sm font-medium text-gray-700">
-                  Car Gearbox Type
-                </label>
-                <div class="mt-1">
-                  <input id="gearbox_type" name="gearbox_type" type="text" autocomplete="off"
-                    v-model="editedCar.gearbox_type" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="fuel_type" class="block text-sm font-medium text-gray-700">
-                  Car Fuel Type
-                </label>
-                <div class="mt-1">
-                  <input id="fuel_type" name="fuel_type" type="text" autocomplete="off" v-model="editedCar.fuel_type"
-                    required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="power" class="block text-sm font-medium text-gray-700">
-                  Car Horse Power
-                </label>
-                <div class="mt-1">
-                  <input id="power" name="power" type="text" autocomplete="off" v-model="editedCar.power" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="engine_capacity" class="block text-sm font-medium text-gray-700">
-                  Car Engine Capacity
-                </label>
-                <div class="mt-1">
-                  <input id="engine_capacity" name="engine_capacity" type="text" autocomplete="off"
-                    v-model="editedCar.engine_capacity" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="engine_code" class="block text-sm font-medium text-gray-700">
-                  Car Engine Code
-                </label>
-                <div class="mt-1">
-                  <input id="engine_code" name="engine_code" type="text" autocomplete="off" v-model="editedCar.engine_code"
-                    required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <label for="vin" class="block text-sm font-medium text-gray-700">
-                  Car Vehicle Identification Number
-                </label>
-                <div class="mt-1">
-                  <input id="vin" name="vin" type="text" autocomplete="off" v-model="editedCar.vin" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-              </div>
-
-              <div>
-                <button type="submit"
-                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Update
-                </button>
-              </div>
-            </form>
+      <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Submit</button>
+    </form>
           </div>
         </div>
         <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
@@ -632,6 +446,36 @@ import foot from '../include/foot.vue';
 
 export default {
 
+    data() {
+    return {
+      checkin: '',
+      checkout: '',
+      carId: '',
+      userId: '',
+    };
+  },
+  methods: {
+    submitForm() {
+      const reservationData = {
+        checkin: this.checkin,
+        checkout: this.checkout,
+        carId: this.carId,
+        userId: this.userId,
+      };
+
+      axios.post('/api/reservations', reservationData)
+        .then(response => {
+          console.log(response.data);
+          // do something with the response data, such as show a success message
+        })
+        .catch(error => {
+          console.error(error);
+          // handle the error, such as showing an error message to the user
+        });
+    }
+  },
+
+
   components: { top, foot },
   data() {
     return {
@@ -649,42 +493,8 @@ export default {
       this.isLoggedIn = true;
       this.user = JSON.parse(user).name;
     }
-    axios.get('http://127.0.0.1:8000/api/cars')
-    .then(response => {
-      this.cars = response.data;
-      console.log()
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  },
-  computed: {
-  firstIndex() {
-    return (this.currentPage - 1) * this.itemsPerPage;
-  },
-  lastIndex() {
-    return this.currentPage * this.itemsPerPage;
-  },
-  totalPages() {
-    return Math.ceil(this.cars.length / this.itemsPerPage);
-  }
-},
-methods: {
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      console.log('currentPage:', this.currentPage);
-    }
-  },
-  nextPage() {
-    if (this.currentPage < Math.ceil(this.cars.length / this.itemsPerPage)) {
-      this.currentPage++;
-      console.log('currentPage:', this.currentPage);
-    }
-  }
+
 }
-
-
 
 }
 
