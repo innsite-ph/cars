@@ -59,26 +59,26 @@ function openReserveModal(car) {
 
 
 <template>
-    <div class="min-h-full">
-        <top />
-        <br><br><br>
-        <div class="relative mb-4 flex w-full flex-wrap items-stretch">
-            <input style="margin-left: 670px" v-model="searchQuery" type="search"
-                class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
-                placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
-            <div class="relative">
-                <label for="checkin-date" class="sr-only">Check-in Date</label>
-                <input id="checkin-date" v-model="checkInInput" type="datetime-local"
-                    class="relative z-10 m-0 -ml-px block w-32 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
-                    placeholder="Check-in" />
-            </div>
+    <top />
+    <br><br><br>
+    <div class="relative mb-4 flex w-full flex-wrap items-stretch">
+        <input style="margin-left: 670px" v-model="searchQuery" type="search"
+            class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+            placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
+            
+        <div class="relative">
+            <label for="checkin-date" >Check-in Date</label>
+            <input id="checkin-date" v-model="checkInInput" type="datetime-local"
+                class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+                placeholder="Check-in" />
+        </div>
 
-            <div class="relative">
-                <label for="checkout-date" class="sr-only">Check-out Date</label>
-                <input id="checkout-date" v-model="checkOutInput" type="datetime-local"
-                    class="relative z-10 m-0 -ml-px block w-32 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
-                    placeholder="Check-out" />
-            </div>
+        <div class="relative">
+            <label for="checkout-date" >Check-out Date</label>
+            <input id="checkout-date" v-model="checkOutInput" type="datetime-local"
+                class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+                placeholder="Check-out" />
+        </div>
 
             <button @click="fetchData"
                 class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
@@ -87,98 +87,83 @@ function openReserveModal(car) {
             </button>
         </div>
 
-        <div class="w-full flex justify-end items-center mb-4">
-            <select style="margin-right: 112px;" id="items-per-page-select"
-                class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage" @change="changeItemsPerPage">
-                <option value="5" selected>5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-            </select>
-            <div class="order-last ml-12">
-            </div>
+    <div class="w-full flex justify-end items-center mb-4">
+        <select style="margin-right: 400px;" id="items-per-page-select"
+            class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage" @change="changeItemsPerPage">
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+        </select>
+        <div class="order-last ml-12">
         </div>
-        <div class="table-responsive">
-            <table class="w-1/2 mx-auto divide-y divide-gray-200">
-                <thead>
-                    <tr>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Brand</th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Model</th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Color</th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Fuel Type </th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            License Plate</th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Power</th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Car Year </th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Availability</th>
-                        <th
-                            class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ car.brand }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.model }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.colour }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.fuel_type }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.license_plate }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.power }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.car_year }}</td>
-                        <td>
-                            <div v-if="!car.not_available"
-                                class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 border border-teal-500 rounded">
-                                Available!
-                            </div>
-                            <h1 v-else
-                                class="bg-red-500 hover:bg-red-500 text-white font-bold py-2 px-4 border border-red-500 rounded">
-                                Not Available</h1>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button @click="() => openReserveModal(car)"
-                                class="bg-indigo-500 hover:bg-indigo-500 text-white font-bold py-2 px-4 border border-indigo-500 rounded">
-                                <svg style="margin: 0px;" xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M3 13.414V17a1 1 0 001 1h3.586a1 1 0 00.707-.293l9-9a1 1 0 000-1.414l-3.293-3.293a1 1 0 00-1.414 0l-9 9a1 1 0 00-.293.707zm12.293-8.707a1 1 0 010 1.414l-1.586 1.586-3-3L11 3h3a1 1 0 011 1v3zM5 15h6.586L15 10.414v-3L9.414 15H5v3H3v-3a2 2 0 012-2z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-            <div style="margin-left: 1600px;" class="flex justify-center space-x-2">
-                <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
-                    class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 disabled:opacity-50">
-                    Prev
-                </button>
-                <template v-for="pageNumber in pages">
-                    <button @click="goToPage(pageNumber)"
-                        :class="{ 'bg-indigo-500 text-white': pageNumber === currentPage }"
-                        class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-                        {{ pageNumber }}
-                    </button>
-                </template>
-                <button @click="goToPage(currentPage + 1)" :disabled="currentPage === pageCount"
-                    class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 disabled:opacity-50">
-                    Next
+    </div>
+    <div class="table-responsive">
+        <table class="w-1/2 mx-auto divide-y divide-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Brand</th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Model</th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Color</th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Fuel Type </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        License Plate</th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Power</th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Car Year </th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Availability</th>
+                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ car.brand }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.model }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.colour }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.fuel_type }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.license_plate }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.power }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.car_year }}</td>
+                    <td>
+                        <div v-if="!car.not_available"
+                            class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 border border-teal-500 rounded">
+                            Available!
+                        </div>
+                        <h1 v-else
+                            class="bg-red-500 hover:bg-red-500 text-white font-bold py-2 px-4 border border-red-500 rounded">
+                            Not Available</h1>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button @click="() => openReserveModal(car)"
+                            class="bg-indigo-500 hover:bg-indigo-500 text-white font-bold py-2 px-4 border border-indigo-500 rounded">
+                            <svg style="margin: 0px;" xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2"
+                                viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M3 13.414V17a1 1 0 001 1h3.586a1 1 0 00.707-.293l9-9a1 1 0 000-1.414l-3.293-3.293a1 1 0 00-1.414 0l-9 9a1 1 0 00-.293.707zm12.293-8.707a1 1 0 010 1.414l-1.586 1.586-3-3L11 3h3a1 1 0 011 1v3zM5 15h6.586L15 10.414v-3L9.414 15H5v3H3v-3a2 2 0 012-2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <div style="margin-left: 1000px;" class="flex justify-center space-x-2">
+            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
+                class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 disabled:opacity-50">
+                Prev
+            </button>
+            <template v-for="pageNumber in pages">
+                <button @click="goToPage(pageNumber)" :class="{ 'bg-indigo-500 text-white': pageNumber === currentPage }"
+                    class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-300">
+                    {{ pageNumber }}
                 </button>
 
             </div>
