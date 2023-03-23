@@ -9,7 +9,6 @@ const cars = ref([])
 const searchQuery = ref("")
 const checkInInput = ref('')
 const checkOutInput = ref('')
-const cars = ref({'data': []})
 
 // fetch the cars data
 
@@ -61,6 +60,52 @@ function openReserveModal(car) {
 }
 
 
+let reserveFormSubmit = ref({
+    "car_id": '1',
+    "user_id": '',
+    "check_in_date": "",
+    "check_out_date": ""
+})
+async function submitReserve(reserveCarForm) {
+    reserveModal.value = false
+    reserveFormSubmit.value.car_id = reserveCarForm.car_id;
+    reserveFormSubmit.value.user_id = reserveCarForm.user_id;
+    reserveFormSubmit.value.check_in_date = reserveCarForm.checkInDate;
+    reserveFormSubmit.value.check_out_date = reserveCarForm.checkOutDate;
+    console.log(reserveFormSubmit.value)
+
+    try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/reservations`, {
+            "car_id": reserveCarForm.car_id,
+            "user_id": reserveCarForm.user_id,
+            "check_in_date": reserveCarForm.checkInDate,
+            "check_out_date": reserveCarForm.checkOutDate,
+            
+        }
+        )
+
+
+        // show sweet alert on success
+        Swal.fire({
+            title: 'Reservation Saved!',
+            text: 'Your reservation has been successfully saved.',
+            imageUrl: 'https://64.media.tumblr.com/6a0f1da0ff600d160a6bd41abec009d4/tumblr_mm6esrW5sp1spoqhxo6_400.gifv',
+            imageWidth: 400,
+            imageHeight: 200,
+            //   icon: 'success',
+            confirmButtonText: 'Ok'
+        },
+
+        ).then((result) => {
+        getCars()
+        });
+
+    } catch (error) {
+        console.error(error)
+    }
+
+}
+
 </script>
 
 
@@ -72,7 +117,6 @@ function openReserveModal(car) {
 
         <input style=" margin-left: 600px; height: 40px; color: black;" v-model="searchQuery" type="search"
             class="relative my-6 -mr-px block w-50 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
-
             placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
 
         <div class="relative">
@@ -118,9 +162,9 @@ function openReserveModal(car) {
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <!-- <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
-                                 -->
+                                                 -->
                 <!-- <tr v-for="(car, index) in cars.data" :key="index"> -->
-                    <tr v-for="(car, index) in cars" :key="index">
+                <tr v-for="(car, index) in cars" :key="index">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ car.brand }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.model }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.colour }}</td>
@@ -139,7 +183,7 @@ function openReserveModal(car) {
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button @click="() => openReserveModal(car)"
+                        <button v-if="car.not_available == null"  @click="() => openReserveModal(car)"
                             class="bg-indigo-500 hover:bg-indigo-500 text-white font-bold py-2 px-4 border border-indigo-500 rounded">
                             <svg style="margin: 0px;" xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2"
                                 viewBox="0 0 20 20" fill="currentColor">
@@ -152,10 +196,7 @@ function openReserveModal(car) {
                 </tr>
             </tbody>
         </table>
-        <TailwindPagination
-      :data="cars"
-      @pagination-change-page="carDito"
-  />
+        <TailwindPagination :data="cars" @pagination-change-page="carDito" />
 
     </div>
 
@@ -218,66 +259,10 @@ function openReserveModal(car) {
             </div>
         </div>
     </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
     <foot />
 </template>
 <script>
 // function to update the car data
 
-let reserveFormSubmit = ref({
-    "car_id": '1',
-    "user_id": '',
-    "check_in_date": "",
-    "check_out_date": ""
-})
-async function submitReserve(reserveCarForm) {
-  reserveFormSubmit.value.car_id = reserveCarForm.car_id;
-  reserveFormSubmit.value.user_id = reserveCarForm.user_id;
-  reserveFormSubmit.value.check_in_date = reserveCarForm.checkInDate;
-  reserveFormSubmit.value.check_out_date = reserveCarForm.checkOutDate;
-  console.log(reserveFormSubmit.value)
 
-  try {
-    const response = await axios.post(`http://127.0.0.1:8000/api/reservations`, {
-      "car_id": reserveCarForm.car_id,
-      "user_id": reserveCarForm.user_id,
-      "check_in_date": reserveCarForm.checkInDate,
-      "check_out_date": reserveCarForm.checkOutDate
-    })
-
-    console.log(response.data)
-
-    // show sweet alert on success
-    Swal.fire({
-      title: 'Reservation Saved!',
-      text: 'Your reservation has been successfully saved.',
-      imageUrl: 'https://64.media.tumblr.com/6a0f1da0ff600d160a6bd41abec009d4/tumblr_mm6esrW5sp1spoqhxo6_400.gifv',
-  imageWidth: 400,
-  imageHeight: 200,
-    //   icon: 'success',
-      confirmButtonText: 'Ok'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // close the modal after the SweetAlert is closed
-        reserveModal.value = false;
-      }
-    });
-
-  } catch (error) {
-    console.error(error)
-  }
-
-}
 </script>
