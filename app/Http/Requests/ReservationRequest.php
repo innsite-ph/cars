@@ -24,8 +24,8 @@ class ReservationRequest extends FormRequest
         return [
             'car_id' => 'required',
             'user_id' => 'required',
-            'check_in_date' => 'required|date_format:Y-m-d H:i:s',
-            'check_out_date' => 'required|date_format:Y-m-d H:i:s'
+            'check_in_date' => 'required',
+            'check_out_date' => 'required'
         ];
     }
 }
