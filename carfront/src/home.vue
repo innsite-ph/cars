@@ -122,6 +122,13 @@ function createCar() {
       }
       showModal.value = false
       localStorage.setItem("carData", JSON.stringify(response.data));
+      Swal.fire({
+  position: 'top-end',
+  icon: 'success',
+  title: 'Vehicle has been added!',
+  showConfirmButton: false,
+  timer: 1500
+})
     })
     .catch(error => {
       console.error(error)
@@ -146,6 +153,14 @@ async function updateCar() {
     const index = cars.value.findIndex(car => car.id === editedCar.value.id)
     cars.value[index] = response.data
     editModal.value = false
+
+    Swal.fire({
+  position: 'top-end',
+  icon: 'success',
+  title: 'Update vehicle success!',
+  showConfirmButton: false,
+  timer: 1500
+})
   } catch (error) {
     console.error(error)
   }
@@ -368,8 +383,8 @@ axios.get('http://127.0.0.1:8000/api/cars')
       </div>
     </div>
   </div>
-<div class="table-responsive">
-  <table class="w-1/2 mx-auto divide-y divide-gray-200">
+<div class="overflow-x-auto w-screen">
+  <table class="table-fixed w-full divide-y divide-gray-200">
     <thead>
       <tr>
         <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">VIN</th>
@@ -395,29 +410,27 @@ axios.get('http://127.0.0.1:8000/api/cars')
     <tbody class="bg-white divide-y divide-gray-200">
       <!-- <tr v-for="(car, index) in cars" :key="index"> -->
         <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
-        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ car.vin }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.license_plate }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.brand }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.model }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.gearbox_type }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.colour }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.fuel_type }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.engine_capacity }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.power }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.engine_code }}</td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.car_year }}</td>
+        <td class="px-6 py-4  text-sm font-medium text-gray-900">{{ car.vin }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.license_plate }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.brand }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.model }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.gearbox_type }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.colour }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.fuel_type }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.engine_capacity }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.power }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.engine_code }}</td>
+        <td class="px-6 py-4  text-sm text-gray-500">{{ car.car_year }}</td>
         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
             <button @click="() => openEditModal(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2" viewBox="0 0 20 20" fill="currentColor">
     <path fill-rule="evenodd" d="M3 13.414V17a1 1 0 001 1h3.586a1 1 0 00.707-.293l9-9a1 1 0 000-1.414l-3.293-3.293a1 1 0 00-1.414 0l-9 9a1 1 0 00-.293.707zm12.293-8.707a1 1 0 010 1.414l-1.586 1.586-3-3L11 3h3a1 1 0 011 1v3zM5 15h6.586L15 10.414v-3L9.414 15H5v3H3v-3a2 2 0 012-2z" clip-rule="evenodd" />
   </svg>
-  Edit
 </button>
 <button style="margin-left: 3px;" @click="() => deleteCar(car.id)" class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2" viewBox="0 0 20 20" fill="currentColor">
     <path fill-rule="evenodd" d="M16.707 3.293a1 1 0 00-1.414 0L10 8.586l-5.293-5.293a1 1 0 00-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 001.414 1.414L10 11.414l5.293 5.293a1 1 0 001.414-1.414L11.414 10l5.293-5.293a1 1 0 000-1.414z" clip-rule="evenodd" />
   </svg>
-  Delete
 </button>
 
 
@@ -426,7 +439,7 @@ axios.get('http://127.0.0.1:8000/api/cars')
   </tbody>
 </table>
 <br>
-    <div style="margin-left: 1600px;" class="flex justify-center space-x-2">
+    <div style="margin-left: 1000px;" class="flex justify-center space-x-2">
     <button
       @click="goToPage(currentPage - 1)"
       :disabled="currentPage === 1"
