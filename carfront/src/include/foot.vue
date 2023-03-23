@@ -4,7 +4,7 @@
 
 <template>
 
-<footer class="bottom-0 w-full bg-white shadow dark:bg-gray-800">
+<footer class="sticky bottom-0 w-full bg-white shadow dark:bg-gray-800">
   <div class="w-full mx-auto container md:p-6 p-4 md:flex md:items-center md:justify-between">
     <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a href="#" class="hover:underline">Car Reservation</a>. All Rights Reserved.
     </span>
@@ -25,3 +25,10 @@
   </div>
 </footer>
 </template>
+<!-- <style>
+footer{
+    bottom : 0;
+    position: fixed;
+    width: 100%;
+}
+</style> -->
