@@ -4,15 +4,20 @@ import foot from '../include/foot.vue';
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 
-const cars = ref([])
+// const cars = ref([])
 const searchQuery = ref("")
 const checkInInput = ref('')
 const checkOutInput = ref('')
-const getCars = () => {
-    const url = `http://127.0.0.1:8000/api/car/search?checkInDate=${checkInInput.value}&checkOutDate=${checkOutInput.value}&car=${searchQuery.value}`;
+const cars = ref({'data': []})
+
+// fetch the cars data
+
+const getCars = (page = 1) => {
+    const url = `http://127.0.0.1:8000/api/car/search?checkInDate=${checkInInput.value}&checkOutDate=${checkOutInput.value}&car=${searchQuery.value}&page=${page}`;
     axios.get(url)
         .then(response => {
             cars.value = response.data
+            console.log(cars.value)
         })
         .catch(error => {
             console.error(error)
@@ -46,13 +51,14 @@ const reserveCarForm = ref({
 })
 const reserveModal = ref(false)
 function openReserveModal(car) {
-    reserveCarForm.value.car_id = car.car_id
+    reserveCarForm.value.car_id = car.id
     reserveCarForm.value.user_id = JSON.parse(localStorage.getItem('user'))['id']
     reserveCarForm.value.checkInDate = checkInInput.value
     reserveCarForm.value.checkOutDate = checkOutInput.value
     console.log()
     reserveModal.value = true
 }
+
 
 </script>
 
@@ -63,7 +69,7 @@ function openReserveModal(car) {
     <br><br><br>
     <div class="relative mb-4 flex w-full flex-wrap items-stretch">
         <input style="margin-left: 670px" v-model="searchQuery" type="search"
-            class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+        class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
             placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
 
         <div class="relative">
@@ -123,7 +129,10 @@ function openReserveModal(car) {
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
+                <!-- <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
+                                 -->
+                <!-- <tr v-for="(car, index) in cars.data" :key="index"> -->
+                    <tr v-for="(car, index) in cars" :key="index">
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ car.brand }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.model }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.colour }}</td>
@@ -132,7 +141,7 @@ function openReserveModal(car) {
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.power }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.car_year }}</td>
                     <td>
-                        <div v-if="!car.not_available"
+                        <div v-if="car.not_available == null"
                             class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 border border-teal-500 rounded">
                             Available!
                         </div>
@@ -155,19 +164,10 @@ function openReserveModal(car) {
                 </tr>
             </tbody>
         </table>
-        <br>
-        <div style="margin-left: 1000px;" class="flex justify-center space-x-2">
-            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
-                class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 disabled:opacity-50">
-                Prev
-            </button>
-            <template v-for="pageNumber in pages">
-                <button @click="goToPage(pageNumber)" :class="{ 'bg-indigo-500 text-white': pageNumber === currentPage }"
-                    class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-                    {{ pageNumber }}
-                </button>
-            </template>
-        </div>
+        <TailwindPagination
+      :data="cars"
+      @pagination-change-page="carDito"
+  />
     </div>
 
 

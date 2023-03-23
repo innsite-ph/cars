@@ -118,8 +118,8 @@ class CarsController extends Controller
     public function search_car(Request $request)
     {
         $car = "%" . $request->input("car") . "%";
-        $checkInDate = '2020-01-01 01:00:00';
-        $checkOutDate = '2020-01-01 01:00:00';
+        $checkInDate = $request->input("checkInDate");
+        $checkOutDate = $request->input("checkOutDate");
         // $ids = [];
         // $cars = Cars::select('brand', 'id', 'colour', 'model', 'power', 'fuel_type', 'license_plate', 'car_year')->where('brand', 'like', '%' . $car . '%')
         //     ->orWhere('colour', 'like', '%' . $car . '%')
@@ -167,7 +167,30 @@ class CarsController extends Controller
         // $page = 1;
 
         // $cars = $cars->paginate($perPage, ['*'], 'page', $page);
-        $cars = collect(DB::select("SELECT c.model, (SELECT r.car_id FROM reservations AS r WHERE r.car_id = c.id AND ((? BETWEEN r.check_in_date AND r.check_out_date OR ? BETWEEN r.check_in_date AND r.check_out_date) OR (r.check_in_date BETWEEN ? AND ? AND r.check_out_date BETWEEN ? AND ?))) AS not_available,    c.id,
+
+
+
+
+        //     $cars = collect(DB::select("SELECT 
+        //     c.model,
+        //     (SELECT r.car_id FROM reservations AS r WHERE r.car_id = c.id AND ((? BETWEEN r.check_in_date AND r.check_out_date OR ? BETWEEN r.check_in_date AND r.check_out_date) OR (r.check_in_date BETWEEN ? AND ? AND r.check_out_date BETWEEN ? AND ?))) AS not_available,
+        //     c.id,
+        //     c.car_year,
+        //     c.license_plate,
+        //     c.fuel_type,
+        //     c.power,
+        //     c.model,
+        //     c.colour,
+        //     c.brand
+        // FROM cars AS c where c.model like ?", [$checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $car]));
+
+
+
+        // DB::enableQueryLog(); // Enable query log
+        $cars = collect(DB::select("SELECT 
+        c.model,
+        (SELECT r.car_id FROM reservations AS r WHERE r.car_id = c.id AND ((? BETWEEN r.check_in_date AND r.check_out_date OR ? BETWEEN r.check_in_date AND r.check_out_date) OR (r.check_in_date BETWEEN ? AND ? AND r.check_out_date BETWEEN ? AND ?))) AS not_available,
+        c.id,
         c.car_year,
         c.license_plate,
         c.fuel_type,
@@ -177,20 +200,28 @@ class CarsController extends Controller
         c.brand
     FROM cars AS c where c.model like ?", [$checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $car]));
 
-        $perPage = 10;
-        $page = 1;
+return $cars;
+        $perPage = 10; // Number of cars per page
 
-        $cars = new \Illuminate\Pagination\LengthAwarePaginator(
-            $cars->forPage($page, $perPage),
-            $cars->count(),
-            $perPage,
-            $page,
-            [
-                'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
-            ]
-        );
+        $carsPaginated = $cars->paginate($perPage);
 
-        return $cars;
+        // Your Eloquent query executed by using get()
+
+        // dd(DB::getQueryLog()); // Show results of log
+        // $perPage = 2;
+        // $page = 1;
+
+        // $cars = new \Illuminate\Pagination\LengthAwarePaginator(
+        //     $cars->forPage($page, $perPage),
+        //     $cars->count(),
+        //     $perPage,
+        //     $page,
+        //     [
+        //         'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
+        //         'pageName' => 'page',
+        //     ]
+        // );
+
+        return $carsPaginated;
     }
 }
