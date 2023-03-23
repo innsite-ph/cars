@@ -4,7 +4,8 @@ import foot from '../include/foot.vue';
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 
-// const cars = ref([])
+import Swal from 'sweetalert2';
+const cars = ref([])
 const searchQuery = ref("")
 const checkInInput = ref('')
 const checkOutInput = ref('')
@@ -68,42 +69,29 @@ function openReserveModal(car) {
     <top />
     <br><br><br>
     <div class="relative mb-4 flex w-full flex-wrap items-stretch">
-        <input style="margin-left: 670px" v-model="searchQuery" type="search"
-        class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+
+        <input style=" margin-left: 600px; height: 40px; color: black;" v-model="searchQuery" type="search"
+            class="relative my-6 -mr-px block w-50 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+
             placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
 
         <div class="relative">
             <label for="checkin-date">Check-in Date</label>
-            <input id="checkin-date" v-model="checkInInput" type="datetime-local"
-                class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+            <input style="color: green;" id="checkin-date" v-model="checkInInput" type="datetime-local"
+                class="relative z-10 m-0 -ml-px block w-50 h-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
                 placeholder="Check-in" />
         </div>
 
         <div class="relative">
             <label for="checkout-date">Check-out Date</label>
-            <input id="checkout-date" v-model="checkOutInput" type="datetime-local"
-                class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+            <input style="color: red;" id="checkout-date" v-model="checkOutInput" type="datetime-local"
+                class="relative z-10 m-0 -ml-px block w-50 h-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
                 placeholder="Check-out" />
         </div>
 
-        <button @click="fetchData"
-            class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
-            type="button" id="button-addon3" data-te-ripple-init>
-            Search
-        </button>
     </div>
 
-    <div class="w-full flex justify-end items-center mb-4">
-        <select style="margin-right: 400px;" id="items-per-page-select"
-            class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage" @change="changeItemsPerPage">
-            <option value="5" selected>5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-        </select>
-        <div class="order-last ml-12">
-        </div>
-    </div>
+
     <div class="table-responsive">
         <table class="w-1/2 mx-auto divide-y divide-gray-200">
             <thead>
@@ -168,6 +156,7 @@ function openReserveModal(car) {
       :data="cars"
       @pagination-change-page="carDito"
   />
+
     </div>
 
 
@@ -254,27 +243,41 @@ let reserveFormSubmit = ref({
     "check_out_date": ""
 })
 async function submitReserve(reserveCarForm) {
-    reserveFormSubmit.value.car_id = reserveCarForm.car_id;
-    reserveFormSubmit.value.user_id = reserveCarForm.user_id;
-    reserveFormSubmit.value.check_in_date = reserveCarForm.checkInDate;
-    reserveFormSubmit.value.check_out_date = reserveCarForm.checkOutDate;
-    console.log(reserveFormSubmit.value)
-    try {
-        console.log({
-            "car_id": reserveCarForm.car_id,
-            "user_id": reserveCarForm.user_id,
-            "check_in_date": reserveCarForm.checkInDate,
-            "check_out_date": reserveCarForm.checkOutDate
-        })
-        const response = await axios.post(`http://127.0.0.1:8000/api/reservations`, {
-            "car_id": reserveCarForm.car_id,
-            "user_id": reserveCarForm.user_id,
-            "check_in_date": reserveCarForm.checkInDate,
-            "check_out_date": reserveCarForm.checkOutDate
-        })
-        console.log(response.data)
-    } catch (error) {
-        console.error(error)
-    }
+  reserveFormSubmit.value.car_id = reserveCarForm.car_id;
+  reserveFormSubmit.value.user_id = reserveCarForm.user_id;
+  reserveFormSubmit.value.check_in_date = reserveCarForm.checkInDate;
+  reserveFormSubmit.value.check_out_date = reserveCarForm.checkOutDate;
+  console.log(reserveFormSubmit.value)
+
+  try {
+    const response = await axios.post(`http://127.0.0.1:8000/api/reservations`, {
+      "car_id": reserveCarForm.car_id,
+      "user_id": reserveCarForm.user_id,
+      "check_in_date": reserveCarForm.checkInDate,
+      "check_out_date": reserveCarForm.checkOutDate
+    })
+
+    console.log(response.data)
+
+    // show sweet alert on success
+    Swal.fire({
+      title: 'Reservation Saved!',
+      text: 'Your reservation has been successfully saved.',
+      imageUrl: 'https://64.media.tumblr.com/6a0f1da0ff600d160a6bd41abec009d4/tumblr_mm6esrW5sp1spoqhxo6_400.gifv',
+  imageWidth: 400,
+  imageHeight: 200,
+    //   icon: 'success',
+      confirmButtonText: 'Ok'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // close the modal after the SweetAlert is closed
+        reserveModal.value = false;
+      }
+    });
+
+  } catch (error) {
+    console.error(error)
+  }
+
 }
 </script>
