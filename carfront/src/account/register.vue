@@ -29,15 +29,7 @@ export default {
     console.log(response.data);
     Swal.fire({
   title: 'Your Registration is Successful!! ',
-  width: 600,
-  padding: '3em',
-  backdrop: `
-    url("https://media.giphy.com/media/3oKGzi6qBykxaZyg8g/giphy.gif")
-    left top
-    no-repeat
-    fixed
-    rgba(0, 0, 0, 0.4)
-  `,
+
   customClass: {
     backdrop: 'my-backdrop-class'
   },

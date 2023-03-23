@@ -73,9 +73,6 @@ mounted() {
                     <a href="/" class="text-gray-900 dark:text-white hover:underline" aria-current="page">Home</a>
                 </li>
                 <li>
-                    <a href="#" class="text-gray-900 dark:text-white hover:underline">Book a Reservation</a>
-                </li>
-                <li>
                     <a href="/car" class="text-gray-900 dark:text-white hover:underline">Manage Vehicles</a>
                 </li>
                 <li>
