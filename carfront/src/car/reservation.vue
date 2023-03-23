@@ -65,17 +65,18 @@ function openReserveModal(car) {
         <input style="margin-left: 670px" v-model="searchQuery" type="search"
             class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
             placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
+            
         <div class="relative">
-            <label for="checkin-date" class="sr-only">Check-in Date</label>
+            <label for="checkin-date" >Check-in Date</label>
             <input id="checkin-date" v-model="checkInInput" type="datetime-local"
-                class="relative z-10 m-0 -ml-px block w-32 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+                class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
                 placeholder="Check-in" />
         </div>
 
         <div class="relative">
-            <label for="checkout-date" class="sr-only">Check-out Date</label>
+            <label for="checkout-date" >Check-out Date</label>
             <input id="checkout-date" v-model="checkOutInput" type="datetime-local"
-                class="relative z-10 m-0 -ml-px block w-32 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
+                class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
                 placeholder="Check-out" />
         </div>
 
@@ -87,7 +88,7 @@ function openReserveModal(car) {
     </div>
 
     <div class="w-full flex justify-end items-center mb-4">
-        <select style="margin-right: 112px;" id="items-per-page-select"
+        <select style="margin-right: 400px;" id="items-per-page-select"
             class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage" @change="changeItemsPerPage">
             <option value="5" selected>5</option>
             <option value="10">10</option>
@@ -154,7 +155,7 @@ function openReserveModal(car) {
             </tbody>
         </table>
         <br>
-        <div style="margin-left: 1600px;" class="flex justify-center space-x-2">
+        <div style="margin-left: 1000px;" class="flex justify-center space-x-2">
             <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
                 class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 disabled:opacity-50">
                 Prev
