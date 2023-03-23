@@ -65,27 +65,27 @@ function openReserveModal(car) {
         <input style="margin-left: 670px" v-model="searchQuery" type="search"
             class="relative m-0 -mr-px block w-48 min-w-0 flex-shrink-0 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
             placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
-            
+
         <div class="relative">
-            <label for="checkin-date" >Check-in Date</label>
+            <label for="checkin-date">Check-in Date</label>
             <input id="checkin-date" v-model="checkInInput" type="datetime-local"
                 class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
                 placeholder="Check-in" />
         </div>
 
         <div class="relative">
-            <label for="checkout-date" >Check-out Date</label>
+            <label for="checkout-date">Check-out Date</label>
             <input id="checkout-date" v-model="checkOutInput" type="datetime-local"
                 class="relative z-10 m-0 -ml-px block w-50 min-w-0 rounded-none rounded-r border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary-600 focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200"
                 placeholder="Check-out" />
         </div>
 
-            <button @click="fetchData"
-                class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
-                type="button" id="button-addon3" data-te-ripple-init>
-                Search
-            </button>
-        </div>
+        <button @click="fetchData"
+            class="relative z-[2] rounded-r border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0"
+            type="button" id="button-addon3" data-te-ripple-init>
+            Search
+        </button>
+    </div>
 
     <div class="w-full flex justify-end items-center mb-4">
         <select style="margin-right: 400px;" id="items-per-page-select"
@@ -136,9 +136,10 @@ function openReserveModal(car) {
                             class="bg-teal-500 hover:bg-teal-500 text-white font-bold py-2 px-4 border border-teal-500 rounded">
                             Available!
                         </div>
-                        <h1 v-else
+                        <div v-else
                             class="bg-red-500 hover:bg-red-500 text-white font-bold py-2 px-4 border border-red-500 rounded">
-                            Not Available</h1>
+                            Not Available
+                        </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button @click="() => openReserveModal(car)"
@@ -165,84 +166,83 @@ function openReserveModal(car) {
                     class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-300">
                     {{ pageNumber }}
                 </button>
-
-            </div>
+            </template>
         </div>
+    </div>
 
 
-        <!-- ADD RESERVATION MODAL -->
-        <div v-if="reserveModal" class="fixed z-10 inset-0 overflow-y-auto">
-            <div class="flex items-center justify-center min-h-screen">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+    <!-- ADD RESERVATION MODAL -->
+    <div v-if="reserveModal" class="fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
 
-                <div class="modal bg-white rounded-lg overflow-hidden" style="z-index: 9999">
-                    <div style="width: 690px;" class="px-4 py-5 sm:p-12">
-                        <div class="flex items-start justify-between">
-                            <h3 class="text-lg font-medium text-gray-900">Add Vehicle</h3>
-                            <button @click="reserveModal = false"
-                                class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
-                                <span class="sr-only">Close</span>
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div class="mt-5">
-                            <form @submit.prevent="submitReserve(reserveCarForm)" class="space-y-4">
-                                <div class="flex flex-col">
-                                    <label class="text-lg font-medium mb-2">Car ID:</label>
-                                    <input type="text" v-model="reserveCarForm.car_id" required
-                                        class="border border-gray-300 rounded-lg py-2 px-3">
-                                </div>
-                                <div class="flex flex-col">
-                                    <label class="text-lg font-medium mb-2">User ID:</label>
-                                    <input type="text" v-model="reserveCarForm.user_id" required
-                                        class="border border-gray-300 rounded-lg py-2 px-3">
-                                </div>
-                                <div class="flex flex-col">
-
-                                    <label class="text-lg font-medium mb-2">Check-in Date:</label>
-                                    <input type="datetime-local" v-model="reserveCarForm.checkInDate" required
-                                        class="border border-gray-300 rounded-lg py-2 px-3">
-                                </div>
-                                <div class="flex flex-col">
-                                    <label class="text-lg font-medium mb-2">Check-out Date:</label>
-                                    <input type="datetime-local" v-model="reserveCarForm.checkOutDate" required
-                                        class="border border-gray-300 rounded-lg py-2 px-3">
-                                </div>
-
-                                <button type="submit"
-                                    class="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <div class="modal bg-white rounded-lg overflow-hidden" style="z-index: 9999">
+                <div style="width: 690px;" class="px-4 py-5 sm:p-12">
+                    <div class="flex items-start justify-between">
+                        <h3 class="text-lg font-medium text-gray-900">Add Vehicle</h3>
                         <button @click="reserveModal = false"
-                            class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-transparent rounded-md hover:bg-gray-200 focus:outline-none focus:bg-gray-200 focus:shadow-outline-blue active:bg-gray-200 transition ease-in-out duration-150">
-                            Close
+                            class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
+                            <span class="sr-only">Close</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
                         </button>
-
                     </div>
+
+                    <div class="mt-5">
+                        <form @submit.prevent="submitReserve(reserveCarForm)" class="space-y-4">
+                            <div class="flex flex-col">
+                                <label class="text-lg font-medium mb-2">Car ID:</label>
+                                <input type="text" v-model="reserveCarForm.car_id" required
+                                    class="border border-gray-300 rounded-lg py-2 px-3">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-lg font-medium mb-2">User ID:</label>
+                                <input type="text" v-model="reserveCarForm.user_id" required
+                                    class="border border-gray-300 rounded-lg py-2 px-3">
+                            </div>
+                            <div class="flex flex-col">
+
+                                <label class="text-lg font-medium mb-2">Check-in Date:</label>
+                                <input type="datetime-local" v-model="reserveCarForm.checkInDate" required
+                                    class="border border-gray-300 rounded-lg py-2 px-3">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-lg font-medium mb-2">Check-out Date:</label>
+                                <input type="datetime-local" v-model="reserveCarForm.checkOutDate" required
+                                    class="border border-gray-300 rounded-lg py-2 px-3">
+                            </div>
+
+                            <button type="submit"
+                                class="bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-700">Submit</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <button @click="reserveModal = false"
+                        class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-transparent rounded-md hover:bg-gray-200 focus:outline-none focus:bg-gray-200 focus:shadow-outline-blue active:bg-gray-200 transition ease-in-out duration-150">
+                        Close
+                    </button>
+
                 </div>
             </div>
         </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <foot />
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <foot />
 </template>
 <script>
 // function to update the car data

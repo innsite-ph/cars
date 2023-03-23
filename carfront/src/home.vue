@@ -4,7 +4,9 @@ import Swal from 'sweetalert2';
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 
-const cars = ref([])
+
+import { TailwindPagination } from 'laravel-vue-pagination';
+// const cars = ref([])
 const searchQuery = ref("")
 
 const fetchData = () => {
@@ -26,6 +28,44 @@ onMounted(() => {
 })
 
 function deleteCar(id) {
+  // const swalWithTailwindButtons = Swal.mixin({
+  //   customClass: {
+  //     confirmButton: 'bg-green-500 text-white px-4 py-2 rounded-md mr-3',
+  //     cancelButton: 'bg-red-500 text-white px-4 py-2 rounded-md'
+  //   },
+  //   buttonsStyling: false
+  // })
+  // swalWithTailwindButtons.fire({
+  //   title: 'Are you sure?',
+  //   text: "You won't be able to revert this!",
+  //   icon: 'warning',
+  //   showCancelButton: true,
+  //   confirmButtonText: 'Yes, delete it!',
+  //   cancelButtonText: 'No, cancel!',
+  //   reverseButtons: true
+  // })
+  // if (result.isConfirmed) {
+  //     axios.delete(`http://127.0.0.1:8000/api/cars/${id}`)
+  //       .then(response => {
+  //         console.log(response.data)
+  //         // Remove the deleted car from the list of cars
+  //         // cars.value = cars.value.filter(car => car.id !== id)
+  //         swalWithTailwindButtons.fire(
+  //           'Deleted!',
+  //           'Your data has been deleted.',
+  //           'success'
+  //         )
+  //       location.reload()
+  //       })
+  //       .catch(error => {
+  //         console.error(error)
+  //       })
+  //   }
+
+
+
+
+
   const swalWithTailwindButtons = Swal.mixin({
     customClass: {
       confirmButton: 'bg-green-500 text-white px-4 py-2 rounded-md mr-3',
@@ -42,18 +82,21 @@ function deleteCar(id) {
     confirmButtonText: 'Yes, delete it!',
     cancelButtonText: 'No, cancel!',
     reverseButtons: true
+
   }).then((result) => {
     if (result.isConfirmed) {
       axios.delete(`http://127.0.0.1:8000/api/cars/${id}`)
         .then(response => {
           console.log(response.data)
           // Remove the deleted car from the list of cars
-          cars.value = cars.value.filter(car => car.id !== id)
+          // cars.value = cars.value.filter(car => car.id !== id)
           swalWithTailwindButtons.fire(
             'Deleted!',
             'Your data has been deleted.',
             'success'
           )
+        // location.reload()
+        carDito();
         })
         .catch(error => {
           console.error(error)
@@ -105,7 +148,7 @@ function createCar() {
       localStorage.removeItem("carData");
 
       // Add the new car to the list of cars
-      cars.value.push(response.data)
+      // cars.value.push(response.data)
       // Reset the form
       newCar.value = {
         vin: '',
@@ -129,6 +172,7 @@ function createCar() {
         showConfirmButton: false,
         timer: 1500
       })
+      carDito();
     })
     .catch(error => {
       console.error(error)
@@ -140,7 +184,7 @@ window.addEventListener('load', () => {
 });
 
 function openEditModal(id) {
-  const car = cars.value.find(car => car.id === id)
+  const car = id
   editedCar.value = car
   editModal.value = true
 }
@@ -150,8 +194,8 @@ async function updateCar() {
   try {
     const response = await axios.put(`http://127.0.0.1:8000/api/cars/${editedCar.value.id}`, editedCar.value)
     console.log(response.data)
-    const index = cars.value.findIndex(car => car.id === editedCar.value.id)
-    cars.value[index] = response.data
+    // const index = cars.value.findIndex(car => car.id === editedCar.value.id)
+    // cars.value[index] = response.data
     editModal.value = false
 
     Swal.fire({
@@ -167,13 +211,24 @@ async function updateCar() {
 }
 
 // fetch the cars data
-axios.get('http://127.0.0.1:8000/api/cars')
-  .then(response => {
-    cars.value = response.data
-  })
-  .catch(error => {
-    console.error(error)
-  })
+// axios.get('http://127.0.0.1:8000/api/cars')
+//   .then(response => {
+//     cars.value = response.data
+//   })
+//   .catch(error => {
+//     console.error(error)
+//   })
+const cars = ref({ 'data': [] })
+// fetch the cars data
+const carDito = (page = 1) => {
+  axios.get(`http://127.0.0.1:8000/api/cars?page=${page}`)
+    .then(response => {
+      cars.value = response.data
+    })
+    .catch(error => {
+      console.error(error)
+    })
+}
 
 </script>
 
@@ -204,17 +259,7 @@ axios.get('http://127.0.0.1:8000/api/cars')
       </button>
     </div>
 
-    <div class="w-full flex justify-end items-center mb-4">
-      <select id="items-per-page-select" class="px-2 py-1 bg-gray-200 text-gray-600 rounded-md" v-model="itemsPerPage"
-        @change="changeItemsPerPage">
-        <option value="5" selected>5</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
-      </select>
-      <div class="order-last ml-12">
-      </div>
-    </div>
+
 
     <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
       <div class="flex items-center justify-center min-h-screen">
@@ -402,9 +447,9 @@ axios.get('http://127.0.0.1:8000/api/cars')
             </th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-white divide-y divide-gray-200" v-if="cars.data.length > 0">
           <!-- <tr v-for="(car, index) in cars" :key="index"> -->
-          <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
+          <tr v-for="(car, index) in cars.data" :key="index">
             <td class="px-6 py-4  text-sm font-medium text-gray-900">{{ car.vin }}</td>
             <td class="px-6 py-4  text-sm text-gray-500">{{ car.license_plate }}</td>
             <td class="px-6 py-4  text-sm text-gray-500">{{ car.brand }}</td>
@@ -417,7 +462,7 @@ axios.get('http://127.0.0.1:8000/api/cars')
             <td class="px-6 py-4  text-sm text-gray-500">{{ car.engine_code }}</td>
             <td class="px-6 py-4  text-sm text-gray-500">{{ car.car_year }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <button @click="() => openEditModal(car.id)"
+              <button @click="() => openEditModal(car)"
                 class="inline-flex items-center px-1 py-1 border border-transparent rounded-md font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd"
@@ -439,23 +484,8 @@ axios.get('http://127.0.0.1:8000/api/cars')
           </tr>
         </tbody>
       </table>
-      <br>
-      <div class="flex justify-end space-x-2">
-        <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
-          class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 disabled:opacity-50">
-          Prev
-        </button>
-        <template v-for="pageNumber in pages">
-          <button @click="goToPage(pageNumber)" :class="{ 'bg-indigo-500 text-white': pageNumber === currentPage }"
-            class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-300">
-            {{ pageNumber }}
-          </button>
-        </template>
-        <button @click="goToPage(currentPage + 1)" :disabled="currentPage === pageCount"
-          class="bg-gray-200 px-3 py-2 rounded-md text-gray-700 disabled:opacity-50">
-          Next
-        </button>
-      </div>
+
+      <TailwindPagination :data="cars" @pagination-change-page="carDito" />
     </div>
 
 
