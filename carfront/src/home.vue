@@ -224,6 +224,7 @@ const carDito = (page = 1) => {
   axios.get(`http://127.0.0.1:8000/api/cars?page=${page}`)
     .then(response => {
       cars.value = response.data
+      console.log(response)
     })
     .catch(error => {
       console.error(error)

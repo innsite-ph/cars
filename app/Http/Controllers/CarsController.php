@@ -200,28 +200,30 @@ class CarsController extends Controller
         c.brand
     FROM cars AS c where c.model like ?", [$checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $car]));
 
-return $cars;
+        // return $cars;
         $perPage = 10; // Number of cars per page
 
-        $carsPaginated = $cars->paginate($perPage);
+        // return $cars->paginate($perPage);
 
         // Your Eloquent query executed by using get()
 
         // dd(DB::getQueryLog()); // Show results of log
-        // $perPage = 2;
-        // $page = 1;
+        $perPage = 2;
+        $page = $request->input("page");
+        if ($page == '')
+            $page = 1;
 
-        // $cars = new \Illuminate\Pagination\LengthAwarePaginator(
-        //     $cars->forPage($page, $perPage),
-        //     $cars->count(),
-        //     $perPage,
-        //     $page,
-        //     [
-        //         'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
-        //         'pageName' => 'page',
-        //     ]
-        // );
+        $cars = new \Illuminate\Pagination\LengthAwarePaginator(
+            $cars->forPage($page, $perPage),
+            $cars->count(),
+            $perPage,
+            $page,
+            [
+                'path' => \Illuminate\Pagination\Paginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]
+        );
 
-        return $carsPaginated;
+        return $cars;
     }
 }
