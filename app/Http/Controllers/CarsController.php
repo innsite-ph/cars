@@ -201,14 +201,7 @@ class CarsController extends Controller
     FROM cars AS c where c.model like ?", [$checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $car]));
 
         // return $cars;
-        $perPage = 10; // Number of cars per page
-
-        // return $cars->paginate($perPage);
-
-        // Your Eloquent query executed by using get()
-
-        // dd(DB::getQueryLog()); // Show results of log
-        $perPage = 2;
+        $perPage = 5;
         $page = $request->input("page");
         if ($page == '')
             $page = 1;

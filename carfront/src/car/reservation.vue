@@ -12,7 +12,7 @@ const checkInInput = ref('')
 const checkOutInput = ref('')
 
 // fetch the cars data
-const cars = ref({'data': []})
+const cars = ref({ 'data': [] })
 
 // fetch the cars data
 
@@ -126,7 +126,7 @@ async function submitReserve(reserveCarForm) {
         <div class="flex justify-center gap-2 pb-20">
 
             <input v-model="searchQuery" type="search"
-                class="mt-6 bg-gray-200 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 p-2.5 dark:slate-100 dark:border-slate-100 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="mt-6 bg-gray-200 border border-gray-300 text-dark text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-80 p-2.5 dark:slate-100 dark:border-slate-100 dark:placeholder-gray-400 dark:text-dark dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search" aria-label="Search" aria-describedby="button-addon3" />
 
             <div class="relative">
@@ -180,12 +180,12 @@ async function submitReserve(reserveCarForm) {
                             Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 "  >
+                <tbody class="bg-white divide-y divide-gray-200 ">
                     <!-- <tr v-for="(car, index) in cars.slice(firstIndex, lastIndex)" :key="index">
-                                                                                                             -->
+                                                                                                                 -->
                     <!-- <tr v-for="(car, index) in cars.data" :key="index"> -->
                     <tr v-for="(car, index) in cars.data" :key="index">
-                       
+
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ car.brand }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.model }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.colour }}</td>
@@ -193,6 +193,7 @@ async function submitReserve(reserveCarForm) {
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.license_plate }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.power }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.car_year }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ car.not_available }}</td>
                         <td>
                             <div v-if="car.not_available == null"
                                 class="bg-teal-500 flex-inline hover:bg-teal-500 text-white font-bold py-2 px-4 border border-teal-500 rounded">
@@ -205,22 +206,19 @@ async function submitReserve(reserveCarForm) {
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button v-if="car.not_available == null" @click="() => openReserveModal(car)"
-                                class="bg-indigo-500 hover:bg-indigo-500 text-white font-bold py-2 px-4 border border-indigo-500 rounded">
-                                <svg style="margin: 0px;" xmlns="http://www.w3.org/2000/svg" class="h-5 w- mr-2"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M3 13.414V17a1 1 0 001 1h3.586a1 1 0 00.707-.293l9-9a1 1 0 000-1.414l-3.293-3.293a1 1 0 00-1.414 0l-9 9a1 1 0 00-.293.707zm12.293-8.707a1 1 0 010 1.414l-1.586 1.586-3-3L11 3h3a1 1 0 011 1v3zM5 15h6.586L15 10.414v-3L9.414 15H5v3H3v-3a2 2 0 012-2z"
-                                        clip-rule="evenodd" />
+                                class="bg-indigo-500 hover:bg-indigo-500 text-white font-bold py-2 px-4 border border-indigo-500 rounded"
+                                title="Reserve Vehicle">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
                                 </svg>
                             </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <TailwindPagination
-      :data="cars"
-      @pagination-change-page="getCars"
-  />
+            <TailwindPagination :data="cars" @pagination-change-page="getCars" />
         </div>
 
 
